@@ -1,0 +1,15 @@
+# Ignored directories
+data/
+restored_validation/
+__pycache__/
+.venv/
+.vscode/
+.idea/
+
+# Ignore large/log files
+*.zip
+*.log
+execution_log.txt
+
+# Keep checkpoints but exclude other temp models
+checkpoints/model_epoch_*.pt

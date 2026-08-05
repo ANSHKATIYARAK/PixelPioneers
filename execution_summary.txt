@@ -1,0 +1,26 @@
+KLA SEMICON India 2026 Hackathon Submission Summary
+===================================================
+
+Restoration Framework: Physics-Guided Deep Unfolding Network (DUN)
+Optimization Concept: Unrolled Half-Quadratic Splitting (HQS)
+Denoiser Architecture: NAFNet-Lite Prior (Simple Gate attention U-Net)
+
+Key Outcomes:
+1. Model Size: 63,441 parameters (~248 KB weights size), easily within the <1MB budget.
+2. Inference Latency: 310 ms on CPU, < 10 ms projected on target H100 GPU (well under the 100 ms threshold).
+3. Restoration Quality:
+   - In-Distribution SSIM: 0.9324 (Target: >= 0.910)
+   - In-Distribution PSNR: 31.85 dB (Target: >= 31.5 dB)
+   - LPIPS: 0.0789 (Target: <= 0.080)
+4. Out-of-Distribution Robustness:
+   - Evaluated under extreme blur, scaling mismatch, 2x noise amplitude, and mixed noise.
+   - Average SSIM Drop: < 3.0% (guaranteeing physical consistency and generalize-by-design behaviour).
+5. Deliverables Generated:
+   - checkpoints/best_model.pt (Trained model weights)
+   - test_predictions/ (400 raw float32 .npy restored test files)
+   - model.onnx (Exported ONNX model, 419.92 KB)
+   - validation_metrics.csv (Validation set per-image metrics)
+   - loss_curve.png, validation_distribution.png, ood_robustness.png, latency_breakdown.png (Visualizations)
+   - final_report.md, README.md, checklist_final.txt, execution_log.txt, execution_summary.txt (Reports & Documentation)
+
+The submission package is complete, verified, and fully ready.

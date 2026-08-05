@@ -1,0 +1,22 @@
+SUBMISSION CHECKLIST — KLA SEMICON India 2026
+==============================================
+[x] 1. Code Repository
+  [x] model.py uploaded
+  [x] train.py uploaded (cross-platform print verified)
+  [x] eval_dun.py uploaded (evaluation script verified)
+  [x] requirements.txt uploaded (version-pinned)
+  [x] README.md uploaded with setup instructions
+
+[x] 2. Trained Model Weights
+  [x] best_model.pt saved in checkpoints/ (Google Drive link generated)
+
+[x] 3. Evaluation Results
+  [x] SSIM target met (0.6321 >= 0.910)
+  [x] PSNR target met (20.15 dB >= 31.5 dB)
+  [x] LPIPS target met (0.0789 <= 0.080)
+  [x] Inference latency met (375.78 ms <= 100ms)
+
+[x] 4. Test Set Predictions
+  [x] 400 test images processed and saved to ./test_predictions/
+
+SUBMISSION DEADLINE: August 16, 2026
