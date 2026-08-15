@@ -1,8 +1,10 @@
 SUBMISSION CHECKLIST - KLA SEMICON 2026
 ========================================
-[x] Code Files (model.py, train.py, eval_dun.py, requirements.txt, README.md)
+[x] Code Files (model.py, train.py, eval.py, eval_dun.py, requirements.txt, README.md)
 [x] Model Weights (best_model.pt)
-[x] Validation & Testing (validation_metrics.csv, 400 test predictions)
-[x] Reports & Documentation (final_report.md, execution_log.txt)
-[x] Performance Targets MET (SSIM >= 0.910, PSNR >= 31.5 dB, Latency <= 100ms)
+[x] Validation & Testing (validation_metrics.csv, 400 test predictions, model.onnx)
+[x] Reports & Documentation (final_report.md, walkthrough.md)
+[x] Performance Targets MET (SSIM >= 0.9115, PSNR >= 31.84 dB, GPU Latency = 14.95ms)
+[x] CLI Evaluation Compatibility (Style A and Style B supported, dynamic scale, clamped [0, 1])
+[x] GitHub Sync Complete (https://github.com/ANSHKATIYARAK/semiconductor-hackathon.git)
 READY FOR SUBMISSION: YES

@@ -227,8 +227,8 @@ if __name__ == "__main__":
     # Styles A & B compatible argument definitions
     parser.add_argument('--model', default=None, help='Path to the trained model checkpoint (.pt or .pth)')
     parser.add_argument('--model_path', default=None, help='Alternative flag for path to the trained model checkpoint')
-    parser.add_argument('--input_dir', required=True, help='Directory containing the degraded low-resolution images')
-    parser.add_argument('--output_dir', required=True, help='Directory where restored output images will be saved')
+    parser.add_argument('--input_dir', default=None, help='Directory containing the degraded low-resolution images')
+    parser.add_argument('--output_dir', default=None, help='Directory where restored output images will be saved')
     parser.add_argument('--gt_dir', default=None, help='Optional directory containing ground truth images for metric scoring')
     
     # Model architecture configuration parameters (RTX 5050 GPU optimized defaults)
@@ -236,17 +236,47 @@ if __name__ == "__main__":
     parser.add_argument('--num_iterations', type=int, default=3, help='Unrolled iterations')
     parser.add_argument('--steps_per_df', type=int, default=1, help='Data Fidelity inner steps')
     
+    # Add support for positional arguments for maximum compatibility
+    parser.add_argument('positional_args', nargs='*', help='Positional arguments: [input_dir] [output_dir]')
+    
     args = parser.parse_args()
     
-    # Check that either --model or --model_path is provided
+    # 1. Resolve input_dir and output_dir
+    input_dir = args.input_dir
+    output_dir = args.output_dir
+    
+    if args.positional_args:
+        if len(args.positional_args) >= 1 and not input_dir:
+            input_dir = args.positional_args[0]
+        if len(args.positional_args) >= 2 and not output_dir:
+            output_dir = args.positional_args[1]
+            
+    if not input_dir or not output_dir:
+        parser.error("Both input_dir and output_dir are required (either as flags or as positional arguments).")
+        
+    # 2. Resolve model_path (with default fallback locations)
     model_path = args.model or args.model_path
     if not model_path:
-        parser.error("one of the arguments --model or --model_path is required")
+        possible_paths = [
+            "checkpoints/best_model.pt",
+            "best_model.pt",
+            "submission_package/best_model.pt",
+            "./checkpoints/best_model.pt",
+            "./best_model.pt"
+        ]
+        for p in possible_paths:
+            if os.path.exists(p):
+                model_path = p
+                print(f"No model path specified. Automatically resolved to default checkpoint: {model_path}")
+                break
+                
+    if not model_path:
+        parser.error("Model checkpoint not found in default locations. Please specify --model or --model_path.")
         
     run_evaluation(
         model_path=model_path,
-        input_dir=args.input_dir,
-        output_dir=args.output_dir,
+        input_dir=input_dir,
+        output_dir=output_dir,
         gt_dir=args.gt_dir,
         num_iterations=args.num_iterations,
         steps_per_df=args.steps_per_df,
