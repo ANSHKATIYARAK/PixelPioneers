@@ -1,7 +1,12 @@
 # Physics-Guided Deep Unfolding Network for Joint Semiconductor Image Restoration
 
 Submission for the **KLA SEMICON India 2026 Hackathon**  
-**Problem Statement:** AI-Based Joint Restoration of Degraded Semiconductor Inspection Images (Speckle Noise, Gaussian Blur, 2x Downsampling)
+**Track:** Problem Statement 01 — AI-Based Restoration of Degraded Images  
+**Team Name:** Pixel Pioneers  
+**Members:**  
+*   **Ansh Katiyar** (Lead, VIT Vellore) - anshkatiyar06@gmail.com | +91 8949513257
+*   **Abhinav Yadav** - abhi1012006@gmail.com | +91 9235881010
+*   **Akarsh Gupta** - akarsh.gupta2025@vitstudent.ac.in | +91 7081610062
 
 ---
 
