@@ -1,52 +1,50 @@
-# Execution Walkthrough: KLA Semicon Image Restoration
+# Compliance Audit Walkthrough - KLA Submission Standardization
 
-This walkthrough summarizes the verification steps, testing process, and deliverables completed for the KLA SEMICON India 2026 hackathon image restoration pipeline, optimized and verified on the **NVIDIA GeForce RTX 5050 Laptop GPU**.
+This walkthrough summarizes the refactoring, testing, and packaging steps completed to ensure 100% compliance with the KLA SEMICON India 2026 hackathon submission and benchmarking guidelines.
 
 ---
 
-## 🛠️ Work Accomplished & Changes Made
+## 🛠️ Refactoring & Hardening Actions
 
-1.  **RTX 5050 GPU Environment Setup:**
-    *   Set up a GPU-enabled environment by downloading and installing `torch==2.1.0+cu118` and `torchvision==0.16.0+cu118` in the workspace Python runner.
-    *   Downgraded `numpy` to `1.24.3` to prevent runtime conflicts with PyTorch 2.1.0.
-2.  **Windows Deadlock Optimization:**
-    *   Identified that multi-processing worker processes (`num_workers > 0`) deadlock on Windows with GPU due to fork safety limitations.
-    *   Set `num_workers=0` in both `train.py` and the orchestrator script to ensure sequential main-thread data loading, enabling immediate start of GPU loops.
-3.  **GPU Model Benchmarks:**
-    *   Instantiated the optimized model structure (`channels=24`, unrolled iterations `N=3`, `steps_per_df=1`), resulting in **36,710 parameters** (~170 KB on disk).
-    *   Verified CUDA compatibility and benchmarked forward pass latency on the RTX 5050 GPU, achieving **14.95 ms** per batch of size 2.
-4.  **End-to-End Execution:**
-    *   Successfully executed GPU training on the full training dataset with mixed precision (AMP) and gradient accumulation (`grad_accum=4`, effective batch size of 8).
-    *   Saved the trained model checkpoint to `./checkpoints/best_model.pt`.
-    *   Ran evaluation on the dataset to record SSIM/PSNR and output restored arrays.
-    *   Processed the 400 test set images, generating matching `.npy` predictions inside `./test_predictions/`.
-5.  **Submission Packaging:**
-    *   Consolidated all deliverables into `./submission_package/` containing the code, requirements, weights, metrics, and documentation.
-    *   Ran final smoke tests verifying model shape, parameter count, and prediction file counts.
+1.  **CLI Standardization (`eval.py` & `eval_dun.py`):**
+    *   Refactored CLI parsing to dynamically accept both Style A (`--model`) and Style B (`--model_path`) flags.
+    *   Set default parameters matching the trained RTX 5050 optimized checkpoint: `channels=24`, `num_iterations=3`, and `steps_per_df=1`.
+    *   Verified autonomous fallback: when `--gt_dir` is omitted, the script outputs predictions and exits with code 0 without raising exceptions.
+2.  **Dynamic Resolution & Format Support:**
+    *   Configured `load_image_as_tensor` to handle single-channel `.npy` files of various dimensions (`(H, W)`, `(C, H, W)`, and `(1, C, H, W)`) and standardize them to 4D tensors.
+    *   Ensured fully convolutional scale-invariance, automatically outputting exactly 2x resolution (e.g. `256x256` for `128x128` input).
+3.  **Strict Normalization & Clamping:**
+    *   Updated `save_tensor_as_image` to strictly clamp outputs to the range `[0.0, 1.0]` for both `.npy` arrays and standard image formats.
+4.  **Reproducible Assets:**
+    *   Cleaned `requirements.txt` by removing the unused `pytorch-lightning` dependency.
+    *   Expanded `README.md` to cover setup, dual-style CLI evaluation, the unrolled HQS optimization math formulations, and final performance metrics.
+5.  **Pitch Deck Slide Summary:**
+    *   Expanded `final_report.md` into a detailed 8-slide summary mapped to KLA's requirements (Team Details, Problem, HQS Math, Flow Diagram, Innovation, Results, Tech Stack, and Links).
+6.  **Deliverables Synchronization:**
+    *   Created `eval.py` in the workspace root as a direct alias of `eval_dun.py`.
+    *   Synchronized all updated deliverables inside `./submission_package/` (including `model.onnx`).
+    *   Committed and pushed the updated repository, PDF guideline sheet, and KLA PPTX slides to GitHub.
 
 ---
 
 ## 🔬 Testing & Validation Results
 
-### 1. In-Distribution Validation Performance (Converged Model)
-*   **Average SSIM:** **0.9115** (Target >= 0.910) - **PASSED**
-*   **Average PSNR:** **31.84 dB** (Target >= 31.5 dB) - **PASSED**
-*   **Inference Latency:** **14.95 ms** (RTX 5050 GPU) / **320.57 ms** (CPU) - **PASSED**
-*   **Model Parameter Size:** **36,710 parameters** (~170 KB weights file) - **PASSED**
+### 1. ONNX Model Integrity Check
+*   **Command:** `onnx.checker.check_model(onnx.load("model.onnx"))`
+*   **Result:** **PASSED** - Verified that `model.onnx` is structurally sound and valid.
 
-### 2. Submission Package Deliverables
-All required files have been generated, structured, and verified inside `./submission_package/`:
-*   `best_model.pt`: RTX 5050 GPU-trained weights file
-*   `model.py`: Physics-Guided Deep Unfolding Network model script
-*   `train.py`: Training script with AMP and gradient accumulation
-*   `eval_dun.py`: Evaluation script with fallback checks and disabled LPIPS net-checks
-*   `requirements.txt`: Package dependency mapping
-*   `final_report.md`: Markdown report detailing metrics and architectures
-*   `validation_metrics.csv`: Tabular scores for SSIM/PSNR
-*   `README.md`: Instruction manual for reproducibility
+### 2. CLI Smoke Test (Mock Arrays)
+*   **Command:** Run `smoke_test_evaluation.py`
+*   **Result:** **100% PASSED**
+    *   Generated 5 mock `(128, 128)` `.npy` arrays containing out-of-range floats.
+    *   **Style A Test:** `eval.py --model checkpoints/best_model.pt --input_dir ./mock_input --output_dir ./mock_out_style_a` -> **PASSED** (exit code 0).
+    *   **Style B Test:** `eval.py --model_path checkpoints/best_model.pt --input_dir ./mock_input --output_dir ./mock_out_style_b` -> **PASSED** (exit code 0).
+    *   **Properties Check:** Outputs dynamically scaled to `(256, 256)` and values clamped strictly to `[0.0, 1.0]` -> **PASSED**.
 
----
+### 3. Test Predictions Audit
+*   **Command:** Run `verify_test_predictions.py`
+*   **Result:** **PASSED** - Confirmed that `test_predictions/` contains exactly 400 `.npy` files, all having shape `(256, 256)` and values strictly in range `[0.0, 1.0]`.
 
-## 📈 Visualizations
-Below is the validation metrics histogram generated by the pipeline:
-*   **SSIM and PSNR Distributions:** [validation_metrics_plot.png](file:///c:/Users/VICTUS/Downloads/semiconductor%20hackathon/validation_metrics_plot.png)
+### 4. Remote Repository Synchronization
+*   **Remote Target:** [https://github.com/ANSHKATIYARAK/semiconductor-hackathon.git](https://github.com/ANSHKATIYARAK/semiconductor-hackathon.git)
+*   **Result:** **PASSED** - Staged, committed, and pushed all updated code, packaging folders, PDF guideline docs, and KLA slides successfully.
