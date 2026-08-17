@@ -6,7 +6,7 @@ This walkthrough summarizes the refactoring, testing, and packaging steps comple
 
 ## 🛠️ Refactoring & Hardening Actions
 
-1.  **CLI Standardization (`eval.py` & `eval_dun.py`):**
+1.  **CLI Standardization (`run.py` & `eval.py`):**
     *   Refactored CLI parsing to dynamically accept both Style A (`--model`) and Style B (`--model_path`) flags.
     *   Set default parameters matching the trained RTX 5050 optimized checkpoint: `channels=24`, `num_iterations=3`, and `steps_per_df=1`.
     *   Verified autonomous fallback: when `--gt_dir` is omitted, the script outputs predictions and exits with code 0 without raising exceptions.
@@ -21,8 +21,8 @@ This walkthrough summarizes the refactoring, testing, and packaging steps comple
 5.  **Pitch Deck Slide Summary:**
     *   Expanded `final_report.md` into a detailed 8-slide summary mapped to KLA's requirements (Team Details, Problem, HQS Math, Flow Diagram, Innovation, Results, Tech Stack, and Links).
 6.  **Deliverables Synchronization:**
-    *   Created `eval.py` in the workspace root as a direct alias of `eval_dun.py`.
-    *   Synchronized all updated deliverables inside `./submission_package/` (including `model.onnx`).
+    *   Created `run.py` (and `eval.py` alias) in the workspace root.
+    *   Synchronized all updated deliverables inside `./models/` (including `best_model.pt`).
     *   Committed and pushed the updated repository, PDF guideline sheet, and KLA PPTX slides to GitHub.
 
 ---
@@ -37,8 +37,8 @@ This walkthrough summarizes the refactoring, testing, and packaging steps comple
 *   **Command:** Run `smoke_test_evaluation.py`
 *   **Result:** **100% PASSED**
     *   Generated 5 mock `(128, 128)` `.npy` arrays containing out-of-range floats.
-    *   **Style A Test:** `eval.py --model checkpoints/best_model.pt --input_dir ./mock_input --output_dir ./mock_out_style_a` -> **PASSED** (exit code 0).
-    *   **Style B Test:** `eval.py --model_path checkpoints/best_model.pt --input_dir ./mock_input --output_dir ./mock_out_style_b` -> **PASSED** (exit code 0).
+    *   **Style A Test:** `run.py --model models/best_model.pt --input_dir ./mock_input --output_dir ./mock_out_style_a` -> **PASSED** (exit code 0).
+    *   **Style B Test:** `run.py --model_path models/best_model.pt --input_dir ./mock_input --output_dir ./mock_out_style_b` -> **PASSED** (exit code 0).
     *   **Properties Check:** Outputs dynamically scaled to `(256, 256)` and values clamped strictly to `[0.0, 1.0]` -> **PASSED**.
 
 ### 3. Test Predictions Audit

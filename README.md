@@ -44,16 +44,15 @@ Our Physics-DUN model meets or exceeds all hackathon requirements, providing exc
 │   ├── train/NoisyLR/          # 128x128 degraded train inputs (.npy)
 │   ├── train/GT/               # 256x256 ground truth train targets (.npy)
 │   └── test/NoisyLR/           # 128x128 degraded test inputs (.npy)
-├── checkpoints/                # Model checkpoints and weights
+├── models/                     # Model checkpoints and weights
 │   └── best_model.pt           # Trained physics-guided DUN weights
 ├── test_predictions/           # Generated 256x256 restored test images (.npy)
 ├── model.py                    # Complete PyTorch Physics-Guided DUN architecture
 ├── train.py                    # End-to-end training script with custom losses
+├── run.py                      # Standalone evaluation & inference script (primary)
 ├── eval.py                     # Standalone evaluation & inference script (alias)
-├── eval_dun.py                 # Standalone evaluation & inference script
 ├── requirements.txt            # Pinned Python package requirements
 ├── model.onnx                  # Exported ONNX model
-├── validation_metrics.csv      # File-by-file validation performance
 └── README.md                   # Project documentation
 ```
 
@@ -86,24 +85,24 @@ python -c "import zipfile; zipfile.ZipFile('train.zip').extractall('data'); zipf
 ### 1. Training the Model
 To train the model on your GPU-enabled environment:
 ```bash
-python train.py --epochs 40 --batch_size 2 --lr 5e-4 --weights_dir ./checkpoints --channels 24 --num_iterations 3 --steps_per_df 1 --mixed_precision --grad_accum 4
+python train.py --epochs 40 --batch_size 2 --lr 5e-4 --weights_dir ./models --channels 24 --num_iterations 3 --steps_per_df 1 --mixed_precision --grad_accum 4
 ```
 
 ### 2. Standalone Model Evaluation (Dual CLI Styles)
-The evaluation script supports both standard argument syntaxes.
+The evaluation script supports both standard argument syntaxes and positional args.
 
 **Style A Syntax:**
 ```bash
-python eval.py \
-  --model ./checkpoints/best_model.pt \
+python run.py \
+  --model ./models/best_model.pt \
   --input_dir ./data/train/NoisyLR \
   --output_dir ./restored_validation
 ```
 
 **Style B Syntax (with optional Ground Truth Scoring):**
 ```bash
-python eval.py \
-  --model_path ./checkpoints/best_model.pt \
+python run.py \
+  --model_path ./models/best_model.pt \
   --input_dir ./data/train/NoisyLR \
   --output_dir ./restored_validation \
   --gt_dir ./data/train/GT
@@ -111,11 +110,16 @@ python eval.py \
 
 *Note: If `--gt_dir` is omitted, the script automatically processes all degraded files, writes outputs to `--output_dir`, and exits with code 0 without computing metrics.*
 
+**Positional (Automated Benchmarking Format):**
+```bash
+python run.py ./data/train/NoisyLR ./restored_validation
+```
+
 ### 3. Generating Submission Test Predictions
 To restore the hidden test set and output the raw 256x256 `.npy` files for submission:
 ```bash
-python eval.py \
-  --model ./checkpoints/best_model.pt \
+python run.py \
+  --model ./models/best_model.pt \
   --input_dir ./data/test/NoisyLR \
   --output_dir ./test_predictions
 ```
@@ -150,4 +154,4 @@ This formulation guarantees that the model remains physically consistent with th
 - [x] **Paired Grayscale Support:** Fully compatible with single-channel 32-bit floating point NumPy arrays.
 - [x] **Parameter & Speed Budgets:** 36.7k parameters (< 1.0 MB size) and 14.95 ms GPU latency.
 - [x] **Robustness Verified:** Maintains high quality under extreme blur, scale, and noise drift.
-- [x] **Evaluation Script:** `eval.py` is standalone and runs on CPU/GPU out-of-the-box, supporting Style A & B arguments.
+- [x] **Evaluation Script:** `run.py` (and `eval.py` alias) is standalone and runs on CPU/GPU out-of-the-box, supporting Style A & B arguments and positional syntax.

@@ -91,12 +91,13 @@ Our model was evaluated against a standard 2.1-million parameter baseline U-Net:
 
 ---
 
-### 📌 Slide 8: Deliverables Package & Verification Checklist
+### 📌 Slide 8: Deliverables & Verification Checklist
 *   **Public GitHub Repository:** [https://github.com/ANSHKATIYARAK/semiconductor-hackathon.git](https://github.com/ANSHKATIYARAK/semiconductor-hackathon.git)
-*   **Model Checkpoint:** Public download link for `best_model.pt` embedded in repository `README.md`.
-*   **Verified Deliverables Package (./submission_package/):**
-    *   `eval.py` / `eval_dun.py`: Standalone CLI supporting positional and flag arguments.
-    *   `train.py`: Full training pipeline with mixed precision and multi-loss objective.
+*   **Model Checkpoint:** Public weights download link for `best_model.pt` embedded in repository `README.md` (stored under `models/` folder).
+*   **Verified Deliverables Structure (Root Directory):**
+    *   `run.py` / `eval.py` (alias): Standalone CLI supporting positional and flag arguments.
+    *   `train.py` & `model.py`: Training pipeline and unrolled architecture scripts.
+    *   `models/best_model.pt`: Pinned unrolled model weights (36,710 parameters).
     *   `test_predictions/`: 400 verified `.npy` files ($256 \times 256$, normalized strictly to `[0.0, 1.0]`).
-    *   `requirements.txt`: Clean, pinned `pip freeze` environment requirements.
-    *   `PixelPioneers_KLA_PS01.pptx`: Slide deck matching KLA templates.
+    *   `requirements.txt`: Environment specification file.
+    *   `PixelPioneers_KLA_PS01.pptx` & `PixelPioneers_KLA_PS01.pdf`: Finalized slides.
