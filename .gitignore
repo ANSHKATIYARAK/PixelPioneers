@@ -13,3 +13,7 @@ execution_log.txt
 
 # Keep checkpoints but exclude other temp models
 checkpoints/model_epoch_*.pt
+
+# Exclude slide decks from Git tracking to comply with root submission schema
+*.pptx
+*.pdf
