@@ -297,36 +297,37 @@ if __name__ == "__main__":
     if not input_dir or not output_dir:
         parser.error("Both input_dir and output_dir are required (either as flags or as positional arguments).")
         
-    # 2. Resolve model_path (with default fallback locations, preferring ONNX weights if ONNX runtime is installed)
+    # 2. Resolve model_path (with default fallback locations relative to script directory)
     model_path = args.model or args.model_path
     if not model_path:
+        script_dir = os.path.dirname(os.path.abspath(__file__))
         possible_paths = []
         if ONNX_AVAILABLE:
             possible_paths.extend([
-                "models/model.onnx",
-                "model.onnx",
-                "./models/model.onnx"
+                os.path.join(script_dir, "models", "model.onnx"),
+                os.path.join(script_dir, "model.onnx")
             ])
         possible_paths.extend([
-            "models/best_model.pt",
-            "best_model.pt",
-            "./models/best_model.pt"
+            os.path.join(script_dir, "models", "best_model.pt"),
+            os.path.join(script_dir, "best_model.pt")
         ])
         
         for p in possible_paths:
             if os.path.exists(p):
                 model_path = p
-                print(f"No model path specified. Automatically resolved to default checkpoint: {model_path}")
+                print(f"No model path specified. Automatically resolved to default checkpoint relative to script: {model_path}")
                 break
                 
     if not model_path:
-        # Fallback search inside models/
-        if os.path.exists("models"):
+        # Fallback search inside models/ relative to script directory
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        models_dir = os.path.join(script_dir, "models")
+        if os.path.exists(models_dir):
             extensions = (".onnx", ".pt", ".pth") if ONNX_AVAILABLE else (".pt", ".pth")
-            files = [f for f in os.listdir("models") if f.endswith(extensions)]
+            files = [f for f in os.listdir(models_dir) if f.endswith(extensions)]
             if files:
-                model_path = os.path.join("models", files[0])
-                print(f"No model path specified. Automatically resolved to first model in models/: {model_path}")
+                model_path = os.path.join(models_dir, files[0])
+                print(f"No model path specified. Automatically resolved to first model in models/ relative to script: {model_path}")
                 
     if not model_path:
         parser.error("Model checkpoint not found in default locations. Please specify --model or --model_path.")
