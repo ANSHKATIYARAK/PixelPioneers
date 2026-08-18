@@ -40,19 +40,12 @@ Our Physics-DUN model meets or exceeds all hackathon requirements, providing exc
 ## 📁 Repository Structure
 
 ```
-├── data/                       # Extracted dataset directory
-│   ├── train/NoisyLR/          # 128x128 degraded train inputs (.npy)
-│   ├── train/GT/               # 256x256 ground truth train targets (.npy)
-│   └── test/NoisyLR/           # 128x128 degraded test inputs (.npy)
 ├── models/                     # Model checkpoints and weights
-│   └── best_model.pt           # Trained physics-guided DUN weights
-├── test_predictions/           # Generated 256x256 restored test images (.npy)
-├── model.py                    # Complete PyTorch Physics-Guided DUN architecture
-├── train.py                    # End-to-end training script with custom losses
+│   ├── best_model.pt           # Trained physics-guided DUN weights (PyTorch)
+│   ├── model.onnx              # Exported ONNX model graph
+│   └── model.py                # Complete PyTorch Physics-Guided DUN architecture
 ├── run.py                      # Standalone evaluation & inference script (primary)
-├── eval.py                     # Standalone evaluation & inference script (alias)
 ├── requirements.txt            # Pinned Python package requirements
-├── model.onnx                  # Exported ONNX model
 └── README.md                   # Project documentation
 ```
 
@@ -83,10 +76,7 @@ python -c "import zipfile; zipfile.ZipFile('train.zip').extractall('data'); zipf
 ## 💻 Running the Pipeline
 
 ### 1. Training the Model
-To train the model on your GPU-enabled environment:
-```bash
-python train.py --epochs 40 --batch_size 2 --lr 5e-4 --weights_dir ./models --channels 24 --num_iterations 3 --steps_per_df 1 --mixed_precision --grad_accum 4
-```
+*Note: The model has been pre-trained on KLA wafer datasets. The final submission package includes the evaluation pipeline and pre-trained weights (`models/model.onnx` and `models/best_model.pt`) directly, in accordance with submission guidelines.*
 
 ### 2. Standalone Model Evaluation (Dual CLI Styles)
 The evaluation script supports both standard argument syntaxes and positional args.
@@ -154,4 +144,4 @@ This formulation guarantees that the model remains physically consistent with th
 - [x] **Paired Grayscale Support:** Fully compatible with single-channel 32-bit floating point NumPy arrays.
 - [x] **Parameter & Speed Budgets:** 36.7k parameters (< 1.0 MB size) and 14.95 ms GPU latency.
 - [x] **Robustness Verified:** Maintains high quality under extreme blur, scale, and noise drift.
-- [x] **Evaluation Script:** `run.py` (and `eval.py` alias) is standalone and runs on CPU/GPU out-of-the-box, supporting Style A & B arguments and positional syntax.
+- [x] **Evaluation Script:** `run.py` is standalone and runs on CPU/GPU out-of-the-box, supporting Style A & B arguments and positional syntax.

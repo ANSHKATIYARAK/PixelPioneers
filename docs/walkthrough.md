@@ -6,7 +6,7 @@ This walkthrough summarizes the refactoring, testing, and packaging steps comple
 
 ## 🛠️ Refactoring & Hardening Actions
 
-1.  **CLI Standardization (`run.py` & `eval.py`):**
+1.  **CLI Standardization (`run.py`):**
     *   Refactored CLI parsing to dynamically accept both Style A (`--model`) and Style B (`--model_path`) flags.
     *   Set default parameters matching the trained RTX 5050 optimized checkpoint: `channels=24`, `num_iterations=3`, and `steps_per_df=1`.
     *   Verified autonomous fallback: when `--gt_dir` is omitted, the script outputs predictions and exits with code 0 without raising exceptions.
@@ -21,8 +21,8 @@ This walkthrough summarizes the refactoring, testing, and packaging steps comple
 5.  **Pitch Deck Slide Summary:**
     *   Expanded `final_report.md` into a detailed 8-slide summary mapped to KLA's requirements (Team Details, Problem, HQS Math, Flow Diagram, Innovation, Results, Tech Stack, and Links).
 6.  **Deliverables Synchronization:**
-    *   Created `run.py` (and `eval.py` alias) in the workspace root.
-    *   Synchronized all updated deliverables inside `./models/` (including `best_model.pt`).
+    *   Created `run.py` in the workspace root.
+    *   Synchronized all model weights (best_model.pt and model.onnx) and model definitions (model.py) inside `./models/`.
     *   Committed and pushed the updated repository, PDF guideline sheet, and KLA PPTX slides to GitHub.
 
 ---
@@ -30,7 +30,7 @@ This walkthrough summarizes the refactoring, testing, and packaging steps comple
 ## 🔬 Testing & Validation Results
 
 ### 1. ONNX Model Integrity Check
-*   **Command:** `onnx.checker.check_model(onnx.load("model.onnx"))`
+*   **Command:** `onnx.checker.check_model(onnx.load("models/model.onnx"))`
 *   **Result:** **PASSED** - Verified that `model.onnx` is structurally sound and valid.
 
 ### 2. CLI Smoke Test (Mock Arrays)

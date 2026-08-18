@@ -93,11 +93,11 @@ Our model was evaluated against a standard 2.1-million parameter baseline U-Net:
 
 ### 📌 Slide 8: Deliverables & Verification Checklist
 *   **Public GitHub Repository:** [https://github.com/ANSHKATIYARAK/semiconductor-hackathon.git](https://github.com/ANSHKATIYARAK/semiconductor-hackathon.git)
-*   **Model Checkpoint:** Public weights download link for `best_model.pt` embedded in repository `README.md` (stored under `models/` folder).
+*   **Model Checkpoint:** Public weights download link for `best_model.pt` and `model.onnx` embedded in repository `README.md` (stored under `models/` folder).
 *   **Verified Deliverables Structure (Root Directory):**
-    *   `run.py` / `eval.py` (alias): Standalone CLI supporting positional and flag arguments.
-    *   `train.py` & `model.py`: Training pipeline and unrolled architecture scripts.
-    *   `models/best_model.pt`: Pinned unrolled model weights (36,710 parameters).
-    *   `test_predictions/`: 400 verified `.npy` files ($256 \times 256$, normalized strictly to `[0.0, 1.0]`).
-    *   `requirements.txt`: Environment specification file.
-    *   `PixelPioneers_KLA_PS01.pptx` & `PixelPioneers_KLA_PS01.pdf`: Finalized slides.
+    *   `run.py`: Standalone CLI supporting positional and flag arguments.
+    *   `models/model.onnx`: Exported ONNX model graph (default weights path).
+    *   `models/best_model.pt`: Trained PyTorch weights.
+    *   `models/model.py`: DUN architecture script.
+    *   `requirements.txt`: Pinned python environment dependencies.
+    *   `docs/PixelPioneers_KLA_PS01.pptx` & `docs/PixelPioneers_KLA_PS01.pdf`: Finalized slides.
