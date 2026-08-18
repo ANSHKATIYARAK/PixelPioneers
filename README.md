@@ -2,7 +2,7 @@
 
 Submission for the **KLA SEMICON India 2026 Hackathon**  
 **Track:** Problem Statement 01 — AI-Based Restoration of Degraded Images  
-**Team Name:** Pixel Pioneers  
+**Team Name:** PixelPioneers  
 **Members:**  
 *   **Ansh Katiyar** (Lead, VIT Vellore) - anshkatiyar06@gmail.com | +91 8949513257
 *   **Abhinav Yadav** - abhi1012006@gmail.com | +91 9235881010
