@@ -7,6 +7,7 @@ Submission for the **KLA SEMICON India 2026 Hackathon**
 *   **Ansh Katiyar** (Lead, VIT Vellore) - anshkatiyar06@gmail.com | +91 8949513257
 *   **Abhinav Yadav** - abhi1012006@gmail.com | +91 9235881010
 *   **Akarsh Gupta** - akarsh.gupta2025@vitstudent.ac.in | +91 7081610062
+*   **Aakarsh Sharma** - aakarshsharma33@gmail.com | +91 9536318777
 
 ---
 
